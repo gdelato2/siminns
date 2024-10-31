@@ -24,7 +24,8 @@ end
 normalizeFun = @(x) normalizeFunction(x);
 
 % Generate regular samples using Latin Hypercube Sampling (LHS) and the simple normalization function
-[regSampleTable] = regularSampling(lhsdesign(numSamples, numParameters), nominalLimits, normalizeFun);
+[simpleSampleTable] = regularSampling(lhsdesign(numSamples, numParameters), nominalLimits, normalizeFun);
+writetable(simpleSampleTable, 'example2_simpleSampleTable.csv');
 
 %% Sampling with Constraints
 % Define constraints function for constrained sampling
@@ -42,6 +43,7 @@ constraintFun = @(x) sampleConstraint(x, idxInlets, idxOutlet);
 
 % Generate constrained samples
 [constraintSampleTable] = constrainedSampling(lhsdesign(numSamples, numParameters), nominalLimits, constraintFun, [idxOutlet]);
+writetable(constraintSampleTable, 'example2_constraintSampleTable.csv');
 
 %% Plotting
 % Set up figure for plotting histograms of the molar fractions
@@ -56,9 +58,9 @@ titles = {'Inlet 1', 'Inlet 2', 'Inlet 3', 'Outlet'};
 % Inlet 1
 nexttile(tiles);
 hold on;
-minData = floor(20*min([nominalLimits.Inlet1.limits(1), min(regSampleTable.Inlet1), min(constraintSampleTable.Inlet1)]))/20;
-maxData = ceil(20*max([nominalLimits.Inlet1.limits(2), max(regSampleTable.Inlet1), max(constraintSampleTable.Inlet1)]))/20;
-h = histogram(regSampleTable.Inlet1, minData:5:maxData, 'Normalization', 'probability');
+minData = floor(20*min([nominalLimits.Inlet1.limits(1), min(simpleSampleTable.Inlet1), min(constraintSampleTable.Inlet1)]))/20;
+maxData = ceil(20*max([nominalLimits.Inlet1.limits(2), max(simpleSampleTable.Inlet1), max(constraintSampleTable.Inlet1)]))/20;
+h = histogram(simpleSampleTable.Inlet1, minData:5:maxData, 'Normalization', 'probability');
 g = histogram(constraintSampleTable.Inlet1, h.BinEdges, 'Normalization','probability');
 idxMin = find(h.BinEdges<=nominalLimits.Inlet1.limits(1), 1, 'last');
 idxMax = find(h.BinEdges>=nominalLimits.Inlet1.limits(2), 1, 'first');
@@ -75,9 +77,9 @@ ylabel('Probability')
 % Inlet 2
 nexttile(tiles);
 hold on;
-minData = floor(20*min([nominalLimits.Inlet2.limits(1), min(regSampleTable.Inlet2), min(constraintSampleTable.Inlet2)]))/20;
-maxData = ceil(20*max([nominalLimits.Inlet2.limits(2), max(regSampleTable.Inlet2), max(constraintSampleTable.Inlet2)]))/20;
-h = histogram(regSampleTable.Inlet2, minData:5:maxData, 'Normalization', 'probability');
+minData = floor(20*min([nominalLimits.Inlet2.limits(1), min(simpleSampleTable.Inlet2), min(constraintSampleTable.Inlet2)]))/20;
+maxData = ceil(20*max([nominalLimits.Inlet2.limits(2), max(simpleSampleTable.Inlet2), max(constraintSampleTable.Inlet2)]))/20;
+h = histogram(simpleSampleTable.Inlet2, minData:5:maxData, 'Normalization', 'probability');
 g = histogram(constraintSampleTable.Inlet2, h.BinEdges, 'Normalization','probability');
 idxMin = find(h.BinEdges<=nominalLimits.Inlet2.limits(1), 1, 'last');
 idxMax = find(h.BinEdges>=nominalLimits.Inlet2.limits(2), 1, 'first');
@@ -94,9 +96,9 @@ ylabel('Probability')
 % Inlet 3
 nexttile(tiles);
 hold on;
-minData = floor(20*min([nominalLimits.Inlet3.limits(1), min(regSampleTable.Inlet3), min(constraintSampleTable.Inlet3)]))/20;
-maxData = ceil(20*max([nominalLimits.Inlet3.limits(2), max(regSampleTable.Inlet3), max(constraintSampleTable.Inlet3)]))/20;
-h = histogram(regSampleTable.Inlet3, minData:5:maxData, 'Normalization', 'probability');
+minData = floor(20*min([nominalLimits.Inlet3.limits(1), min(simpleSampleTable.Inlet3), min(constraintSampleTable.Inlet3)]))/20;
+maxData = ceil(20*max([nominalLimits.Inlet3.limits(2), max(simpleSampleTable.Inlet3), max(constraintSampleTable.Inlet3)]))/20;
+h = histogram(simpleSampleTable.Inlet3, minData:5:maxData, 'Normalization', 'probability');
 g = histogram(constraintSampleTable.Inlet3, h.BinEdges, 'Normalization','probability');
 idxMin = find(h.BinEdges<=nominalLimits.Inlet3.limits(1), 1, 'last');
 idxMax = find(h.BinEdges>=nominalLimits.Inlet3.limits(2), 1, 'first');
@@ -113,9 +115,9 @@ ylabel('Probability')
 % Outlet
 nexttile(tiles);
 hold on;
-minData = floor(20*min([nominalLimits.Outlet.limits(1), min(regSampleTable.Outlet), min(constraintSampleTable.Outlet)]))/20;
-maxData = ceil(20*max([nominalLimits.Outlet.limits(2), max(regSampleTable.Outlet), max(constraintSampleTable.Outlet)]))/20;
-h = histogram(regSampleTable.Outlet, minData:5:maxData, 'Normalization', 'probability');
+minData = floor(20*min([nominalLimits.Outlet.limits(1), min(simpleSampleTable.Outlet), min(constraintSampleTable.Outlet)]))/20;
+maxData = ceil(20*max([nominalLimits.Outlet.limits(2), max(simpleSampleTable.Outlet), max(constraintSampleTable.Outlet)]))/20;
+h = histogram(simpleSampleTable.Outlet, minData:5:maxData, 'Normalization', 'probability');
 histogram(constraintSampleTable.Outlet, h.BinEdges, 'Normalization','probability');
 idxMin = find(h.BinEdges<=nominalLimits.Outlet.limits(1), 1, 'last');
 idxMax = find(h.BinEdges>=nominalLimits.Outlet.limits(2), 1, 'first');
@@ -130,4 +132,4 @@ box on
 title(titles{4});
 xlabel('Flow Rate (lpm)')
 ylabel('Probability')
-legend('Simple Normalization','Constrained Sampling','Nominal Limits', 'Ideal Probability')
+legend('Simple Sampling','Constrained Sampling','Nominal Limits', 'Ideal Probability')

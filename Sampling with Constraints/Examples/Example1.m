@@ -27,7 +27,8 @@ end
 normalizeFun = @(x) normalizeFunction(x, parametersNormalize);  % Create a handle to the normalization function
 
 % Generate regular samples using Latin Hypercube Sampling (LHS) and the simple normalization function
-[regSampleTable] = regularSampling(lhsdesign(numSamples, numParameters), nominalLimits, normalizeFun);
+[simpleSampleTable] = regularSampling(lhsdesign(numSamples, numParameters), nominalLimits, normalizeFun);
+writetable(simpleSampleTable, 'example1_simpleSampleTable.csv');
 
 %% Sampling with Constraints
 % Define constraints function for constrained sampling
@@ -43,6 +44,7 @@ constraintFun = @(x) sampleConstraint(x, idxNormalize);
 
 % Generate constrained samples
 [constraintSampleTable] = constrainedSampling(lhsdesign(numSamples, numParameters), nominalLimits, constraintFun, []);
+writetable(constraintSampleTable, 'example1_constraintSampleTable.csv');
 
 %% Plotting
 % Set up figure for plotting histograms of the molar fractions
@@ -59,9 +61,9 @@ titles = {'Molar Fraction 1', 'Molar Fraction 2', 'Molar Fraction 3'};
 % Molar Fraction 1
 nexttile(tiles);
 hold on;
-minData = floor(20*min([nominalLimits.MolarFraction1.limits(1), min(regSampleTable.MolarFraction1), min(constraintSampleTable.MolarFraction1)]))/20;
-maxData = ceil(20*max([nominalLimits.MolarFraction1.limits(2), max(regSampleTable.MolarFraction1), max(constraintSampleTable.MolarFraction1)]))/20;
-h = histogram(regSampleTable.MolarFraction1, minData:0.01:maxData, 'Normalization', 'probability');
+minData = floor(20*min([nominalLimits.MolarFraction1.limits(1), min(simpleSampleTable.MolarFraction1), min(constraintSampleTable.MolarFraction1)]))/20;
+maxData = ceil(20*max([nominalLimits.MolarFraction1.limits(2), max(simpleSampleTable.MolarFraction1), max(constraintSampleTable.MolarFraction1)]))/20;
+h = histogram(simpleSampleTable.MolarFraction1, minData:0.01:maxData, 'Normalization', 'probability');
 histogram(constraintSampleTable.MolarFraction1, h.BinEdges, 'Normalization','probability');
 idxMin = find(h.BinEdges <= nominalLimits.MolarFraction1.limits(1), 1, 'last');
 idxMax = find(h.BinEdges >= nominalLimits.MolarFraction1.limits(2), 1, 'first');
@@ -80,9 +82,9 @@ ylabel('Probability')
 % Molar Fraction 2
 nexttile(tiles);
 hold on;
-minData = floor(20*min([nominalLimits.MolarFraction2.limits(1), min(regSampleTable.MolarFraction2), min(constraintSampleTable.MolarFraction2)]))/20;
-maxData = ceil(20*max([nominalLimits.MolarFraction2.limits(2), max(regSampleTable.MolarFraction2), max(constraintSampleTable.MolarFraction2)]))/20;
-h = histogram(regSampleTable.MolarFraction2, minData:0.01:maxData, 'Normalization', 'probability');
+minData = floor(20*min([nominalLimits.MolarFraction2.limits(1), min(simpleSampleTable.MolarFraction2), min(constraintSampleTable.MolarFraction2)]))/20;
+maxData = ceil(20*max([nominalLimits.MolarFraction2.limits(2), max(simpleSampleTable.MolarFraction2), max(constraintSampleTable.MolarFraction2)]))/20;
+h = histogram(simpleSampleTable.MolarFraction2, minData:0.01:maxData, 'Normalization', 'probability');
 histogram(constraintSampleTable.MolarFraction2, h.BinEdges, 'Normalization','probability');
 idxMin = find(h.BinEdges <= nominalLimits.MolarFraction2.limits(1), 1, 'last');
 idxMax = find(h.BinEdges >= nominalLimits.MolarFraction2.limits(2), 1, 'first');
@@ -100,9 +102,9 @@ xlabel('Molar Fraction (-)')
 % Molar Fraction 3
 nexttile(tiles);
 hold on;
-minData = floor(20*min([nominalLimits.MolarFraction3.limits(1), min(regSampleTable.MolarFraction3), min(constraintSampleTable.MolarFraction3)]))/20;
-maxData = ceil(20*max([nominalLimits.MolarFraction3.limits(2), max(regSampleTable.MolarFraction3), max(constraintSampleTable.MolarFraction3)]))/20;
-h = histogram(regSampleTable.MolarFraction3, minData:0.01:maxData, 'Normalization', 'probability');
+minData = floor(20*min([nominalLimits.MolarFraction3.limits(1), min(simpleSampleTable.MolarFraction3), min(constraintSampleTable.MolarFraction3)]))/20;
+maxData = ceil(20*max([nominalLimits.MolarFraction3.limits(2), max(simpleSampleTable.MolarFraction3), max(constraintSampleTable.MolarFraction3)]))/20;
+h = histogram(simpleSampleTable.MolarFraction3, minData:0.01:maxData, 'Normalization', 'probability');
 histogram(constraintSampleTable.MolarFraction3, h.BinEdges, 'Normalization','probability');
 idxMin = find(h.BinEdges <= nominalLimits.MolarFraction3.limits(1), 1, 'last');
 idxMax = find(h.BinEdges >= nominalLimits.MolarFraction3.limits(2), 1, 'first');
